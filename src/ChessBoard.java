@@ -3,7 +3,7 @@ import java.util.ArrayList;
 class BoardCell {
     int row;
     int col;
-    ChessPiece occupant;//coupling alert
+    ChessPiece occupant;
     public BoardCell(int row, int col){
         this.row = row;
         this.col = col;
@@ -11,15 +11,12 @@ class BoardCell {
     public boolean isInBounds(int boardSize) {
         return this.row < boardSize && this.col < boardSize;
     }
-
     public boolean isEmpty() {
         return this.occupant == null;
     }
-
-    public boolean isOpponent(String team) {
-        return !this.isEmpty() && !this.occupant.getTeam().equalsIgnoreCase(team);
+    public boolean isOpponent(Team team) {
+        return !this.isEmpty() && this.occupant.getTeam() != team;
     }
-
     public String getRepr() {
         String result = " | ";
         if (isEmpty()){
@@ -32,37 +29,30 @@ class BoardCell {
 }
 public class ChessBoard {
     private static final int BOARD_SIZE = 8;
-    private BoardCell [][] board;
+    private final BoardCell [][] board = new BoardCell[BOARD_SIZE][BOARD_SIZE];
     public ChessBoard(){
-        this.board = initBoard();
+        initBoard();
         initPieces();
-
     }
-
-    private BoardCell[][] initBoard() {
-        BoardCell [][] board = new BoardCell[BOARD_SIZE][BOARD_SIZE];
+    private void initBoard() {
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 board[i][j] = new BoardCell(i, j);
             }
         }
-        return board;
     }
-
     private void initPieces() {
-        initPawns("black", BOARD_SIZE - 2);
-        initPawns("white", 1);
+        initPawns(Team.BLACK, BOARD_SIZE - 2);
+        initPawns(Team.WHITE, 1);
     }
-    private void initPawns(String team, int row) {
+    private void initPawns(Team team, int row) {
         for (int col = 0; col < BOARD_SIZE; col++){
             this.board[row][col].occupant = new Pawn(team);
         }
     }
-
-    public boolean isValid(BoardCell newCell, String team) {
+    public boolean isValid(BoardCell newCell, Team team) {
         return newCell.isInBounds(BOARD_SIZE) && (newCell.isEmpty() || newCell.isOpponent(team));
     }
-
     public void display() {
         System.out.println("_".repeat(59));
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -73,10 +63,6 @@ public class ChessBoard {
             //System.out.println("-".repeat(25));
         }
         System.out.println("_".repeat(59));
-    }
-
-    private ChessPiece getPiece(int row, int col) {
-        return board[row][col].occupant;
     }
     public ArrayList<BoardCell> getMoves(int row, int col){
         ArrayList<BoardCell> result = new ArrayList<>();

@@ -1,24 +1,15 @@
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ChessPiece {
-    private Direction[] directions;
-    private int nSteps;
-    private String team;
-    private String repr;
-    public ChessPiece(String team, String repr, Directions[] directions, int nSteps) {
+    private final Team team;
+    private final Direction[] directions;
+    private final int nSteps;
+    private final String repr;
+    public ChessPiece(Team team, String repr, Direction[] directions, int nSteps) {
         this.team = team;
         this.repr = repr;
         this.nSteps = nSteps;
-        this.directions = this.getDirections(directions);
-    }
-
-    private Direction[] getDirections(Directions[] directions) {
-        Direction[] result = new Direction[directions.length];
-        for(int i = 0; i < directions.length; ++i) {
-            result[i] = new Direction(directions[i], this.team);
-        }
-        return result;
+        this.directions = directions;
     }
 
     public ArrayList<BoardCell> getMoves(ChessBoard board, BoardCell currCell){
@@ -26,8 +17,9 @@ public class ChessPiece {
         BoardCell newCell;
         for (Direction dir : this.directions){
             for (int i = 1; i <= this.nSteps; i++){
-                newCell = new BoardCell(currCell.row + (i*dir.rowOffset), currCell.col + (i*dir.colOffset));
-                if (board.isValid(newCell, this.team)){
+                newCell = new BoardCell(currCell.row + i*dir.getRowOffset(team)
+                                        ,currCell.col + i*dir.getColOffset(team));
+                if (board.isValid(newCell, team)){
                     result.add(newCell);
                 }
             }
@@ -35,17 +27,17 @@ public class ChessPiece {
         return result;
     }
 
-    public String getTeam() {
+    public Team getTeam() {
         return this.team;
     }
 
     public String getRepr() {
-        return this.team.toUpperCase().charAt(0) + this.repr.toUpperCase();
+        return this.team.getRepr() + this.repr.toUpperCase();
     }
 }
 
 class Pawn extends ChessPiece{
-    Pawn(String team){
-        super(team, "P", new Directions []{Directions.FORWARD}, 2);
+    Pawn(Team team){
+        super(team, "P", new Direction []{Direction.FORWARD}, 2);
     }
 }
