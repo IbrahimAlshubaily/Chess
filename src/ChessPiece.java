@@ -11,28 +11,57 @@ public class ChessPiece {
         this.nSteps = nSteps;
         this.directions = directions;
     }
-
     public ArrayList<BoardCell> getMoves(ChessBoard board, BoardCell currCell){
         ArrayList<BoardCell> result = new ArrayList<>();
         BoardCell newCell;
+        int row, col;
         for (Direction dir : this.directions){
             for (int i = 1; i <= this.nSteps; i++){
-                newCell = new BoardCell(currCell.row + i*dir.getRowOffset(team)
-                                        ,currCell.col + i*dir.getColOffset(team));
-                if (board.isValid(newCell, team)){
-                    result.add(newCell);
+                row = currCell.row + i*dir.getRowOffset(team);
+                col = currCell.col + i*dir.getColOffset(team);
+                if (board.isInBounds(row, col)){
+                    newCell = board.getCell(row, col);
+                    if (newCell.isValid(team)) {
+                        result.add(newCell);
+                    }else break;
                 }
             }
         }
         return result;
     }
-
     public Team getTeam() {
         return this.team;
     }
-
     public String getRepr() {
         return this.team.getRepr() + this.repr.toUpperCase();
+    }
+}
+
+class Queen extends ChessPiece{
+    Queen(Team team){
+        super(team, "Q", Direction.getDirections(), 8);
+    }
+}
+class King extends ChessPiece{
+    King(Team team){
+        super(team, "K", Direction.getDirections(), 1);
+    }
+}
+class Knight extends ChessPiece{
+    Knight(Team team){
+        super(team, "N", Direction.getKnightDirections(), 1);
+    }
+}
+class Bishop extends ChessPiece{
+    Bishop(Team team){
+        super(team, "B", new Direction []{Direction.FORWARD_LEFT, Direction.FORWARD_RIGHT,
+                Direction.BACKWARD_LEFT, Direction.BACKWARD_RIGHT}, 8);
+    }
+}
+class Rook extends ChessPiece{
+    Rook(Team team){
+        super(team, "R", new Direction []{Direction.FORWARD, Direction.BACKWARD,
+                Direction.LEFT, Direction.RIGHT}, 8);
     }
 }
 

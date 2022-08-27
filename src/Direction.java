@@ -38,5 +38,12 @@ enum Direction{
         }
         return this.colOffset;
     }
+
+    static Direction[] getDirections(){
+        return new Direction[]{FORWARD, BACKWARD, LEFT, RIGHT, FORWARD_LEFT, FORWARD_RIGHT, BACKWARD_LEFT, BACKWARD_RIGHT};
+    }
+    static Direction [] getKnightDirections(){
+        return new Direction[]{KNIGHT_A, KNIGHT_B, KNIGHT_C, KNIGHT_D, KNIGHT_E, KNIGHT_F, KNIGHT_G, KNIGHT_H};
+    }
 }
 
