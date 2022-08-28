@@ -6,10 +6,10 @@ public class ChessBoard {
     private final Player playerOne;
     private final Player playerTwo;
     public ChessBoard(){
-        initBoard();
-        initPieces();
         playerOne = new Player(Team.BLACK);
         playerTwo = new Player(Team.WHITE);
+        initBoard();
+        initPieces();
     }
     void rollOut() throws IOException {
         while(true){
@@ -46,9 +46,7 @@ public class ChessBoard {
         addPiece(new Bishop(team), row, 6);
         addPiece(new Rook(team), row, 7);
     }
-    void addPiece(ChessPiece piece, int row, int col){
-        this.board[row][col].setOccupant(piece);
-    }
+
     public boolean isInBounds(int row, int col) {
         return 0 <= row && row < BOARD_SIZE && 0 <= col && col < BOARD_SIZE;
     }
@@ -57,6 +55,11 @@ public class ChessBoard {
             throw new ArrayIndexOutOfBoundsException();
         }
         return board[row][col];
+    }
+    void addPiece(ChessPiece piece, int row, int col){
+        if (isInBounds(row, col)){
+            this.board[row][col].setOccupant(piece);
+        }
     }
     public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
         if (!source.isEmpty() || !destination.isValid(source.getOccupant().getTeam())){
