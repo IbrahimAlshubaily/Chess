@@ -30,6 +30,9 @@ class ChessBoardCell {
     public void setOccupant(ChessPiece piece) {
         this.occupant = piece;
     }
+    ChessPiece getOccupant(){
+        return this.occupant;
+    }
 
     public ArrayList<ChessBoardCell> getMoves(ChessBoard chessBoard) {
         ArrayList<ChessBoardCell> result = new ArrayList<>();

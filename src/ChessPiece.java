@@ -23,6 +23,7 @@ public class ChessPiece {
                     newCell = board.getCell(row, col);
                     if (newCell.isValid(team)) {
                         result.add(newCell);
+                        if (!newCell.isEmpty()) break;
                     }else break;
                 }else break;
             }

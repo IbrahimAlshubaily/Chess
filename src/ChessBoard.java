@@ -1,12 +1,21 @@
-import java.util.ArrayList;
-
+import java.io.IOException;
 
 public class ChessBoard {
     private static final int BOARD_SIZE = 8;
     private final ChessBoardCell[][] board = new ChessBoardCell[BOARD_SIZE][BOARD_SIZE];
+    private final Player playerOne;
+    private final Player playerTwo;
     public ChessBoard(){
         initBoard();
         initPieces();
+        playerOne = new Player(Team.BLACK);
+        playerTwo = new Player(Team.WHITE);
+    }
+    void rollOut() throws IOException {
+        while(true){
+            playerOne.play(this);
+            playerTwo.play(this);
+        }
     }
     private void initBoard() {
         for (int row = 0; row < BOARD_SIZE; row++){
@@ -23,7 +32,7 @@ public class ChessBoard {
         initFirstRow(Team.WHITE, 0);
     }
     private void initPawns(Team team, int row) {
-        for (int col = 1; col < BOARD_SIZE; col++){
+        for (int col = 0; col < BOARD_SIZE; col++){
             addPiece(new Pawn(team), row, col);
         }
     }
@@ -40,7 +49,6 @@ public class ChessBoard {
     void addPiece(ChessPiece piece, int row, int col){
         this.board[row][col].setOccupant(piece);
     }
-
     public boolean isInBounds(int row, int col) {
         return 0 <= row && row < BOARD_SIZE && 0 <= col && col < BOARD_SIZE;
     }
@@ -50,8 +58,11 @@ public class ChessBoard {
         }
         return board[row][col];
     }
-    public ArrayList<ChessBoardCell> getMoves(int row, int col){
-        return getCell(row, col).getMoves(this);
+    public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
+        if (!source.isEmpty() || !destination.isValid(source.getOccupant().getTeam())){
+            destination.setOccupant(source.getOccupant());
+            source.setOccupant(null);
+        }
     }
     public void display() {
         System.out.println("_".repeat(59));
@@ -60,7 +71,6 @@ public class ChessBoard {
                 System.out.print(board[i][j].getRepr());
             }
             System.out.println(" |");
-            //System.out.println("-".repeat(25));
         }
         System.out.println("_".repeat(59));
     }
