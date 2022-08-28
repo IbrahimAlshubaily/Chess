@@ -11,20 +11,20 @@ public class ChessPiece {
         this.nSteps = nSteps;
         this.directions = directions;
     }
-    public ArrayList<BoardCell> getMoves(ChessBoard board, BoardCell currCell){
-        ArrayList<BoardCell> result = new ArrayList<>();
-        BoardCell newCell;
+    public ArrayList<ChessBoardCell> getMoves(ChessBoard board, ChessBoardCell currCell){
+        ArrayList<ChessBoardCell> result = new ArrayList<>();
+        ChessBoardCell newCell;
         int row, col;
         for (Direction dir : this.directions){
             for (int i = 1; i <= this.nSteps; i++){
-                row = currCell.row + i*dir.getRowOffset(team);
-                col = currCell.col + i*dir.getColOffset(team);
+                row = currCell.getRow() + i*dir.getRowOffset(team);
+                col = currCell.getCol() + i*dir.getColOffset(team);
                 if (board.isInBounds(row, col)){
                     newCell = board.getCell(row, col);
                     if (newCell.isValid(team)) {
                         result.add(newCell);
                     }else break;
-                }
+                }else break;
             }
         }
         return result;

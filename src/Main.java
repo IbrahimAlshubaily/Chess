@@ -3,8 +3,8 @@ public class Main {
         System.out.println("Hello world!");
         ChessBoard board = new ChessBoard();
         board.display();
-        for (BoardCell cell : board.getMoves(0, 0)){
-            System.out.println(cell.row + "  "+ cell.col);
+        for (ChessBoardCell cell : board.getMoves(0, 0)){
+            System.out.println(cell.getRepr());
         }
     }
 }
