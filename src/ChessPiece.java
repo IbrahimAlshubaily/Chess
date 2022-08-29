@@ -17,8 +17,8 @@ public class ChessPiece {
         int row, col;
         for (Direction dir : this.directions){
             for (int i = 1; i <= this.nSteps; i++){
-                row = currCell.getRow() + i*dir.getRowOffset(team);
-                col = currCell.getCol() + i*dir.getColOffset(team);
+                row = currCell.row + i*dir.getRowOffset(team);
+                col = currCell.col + i*dir.getColOffset(team);
                 if (board.isInBounds(row, col)){
                     newCell = board.getCell(row, col);
                     if (newCell.isValid(team)) {
@@ -35,6 +35,10 @@ public class ChessPiece {
     }
     public String getRepr() {
         return this.team.getRepr() + this.repr.toUpperCase();
+    }
+
+    public boolean isKing() {
+        return repr.equalsIgnoreCase("K");
     }
 }
 
@@ -65,9 +69,11 @@ class Rook extends ChessPiece{
                 Direction.LEFT, Direction.RIGHT}, 8);
     }
 }
-
 class Pawn extends ChessPiece{
     Pawn(Team team){
         super(team, "P", new Direction []{Direction.FORWARD}, 2);
     }
+    //public ArrayList<ChessBoardCell> getMoves(ChessBoard board, ChessBoardCell currCell){
+    //return null;
+    //}
 }

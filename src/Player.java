@@ -7,15 +7,21 @@ public class Player{
         this.team = team;
     }
     void play(ChessBoard board) throws IOException {
-        board.display();
+        System.out.println(this.team + " turn");
+        System.out.println("Enter: row,col");
         ChessBoardCell source = selectCell(board);
         if (!source.isEmpty() && source.getOccupant().getTeam() == this.team) {
+
+            System.out.println("Selected "+ source.getRepr());
+            System.out.println("Select a destination among the following options");
             for (ChessBoardCell cell : source.getMoves(board)) {
                 System.out.println(cell.getRepr());
             }
             ChessBoardCell destination = selectCell(board);
             board.movePiece(source, destination);
-            board.display();
+        } else{
+            System.out.println("Invlid Entry");
+            this.play(board);
         }
     }
     private ChessBoardCell selectCell(ChessBoard board) throws IOException {
@@ -24,7 +30,8 @@ public class Player{
         int row = Integer.parseInt(rowCol[0]);
         int col = Integer.parseInt(rowCol[1]);
         if (!board.isInBounds(row, col)){
-            throw new IOException("Invalid input: out of bounds");
+            System.out.println("Out of bounds, row and col must be more than 0 and less than 8. Try again:");
+            return this.selectCell(board);
         }
         return board.getCell(row, col);
     }

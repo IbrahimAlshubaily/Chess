@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 class ChessBoardCell {
-    private final int row;
-    private final int col;
+    final int row;
+    final int col;
     private ChessPiece occupant;
     public ChessBoardCell(int row, int col){
         this.row = row;
@@ -21,7 +21,7 @@ class ChessBoardCell {
         String result = " | ";
         if (isEmpty()){
             result += this.row + "  " + this.col;
-        }else{
+        } else {
             result += " " + this.occupant.getRepr() + " ";
         }
         return result;
@@ -40,12 +40,5 @@ class ChessBoardCell {
             result = this.occupant.getMoves(chessBoard, this);
         }
         return result;
-    }
-
-    int getRow() {
-        return this.row;
-    }
-    int getCol(){
-        return this.col;
     }
 }
