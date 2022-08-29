@@ -58,7 +58,8 @@ public class ChessBoard {
     }
     public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
         if (!source.isEmpty() || !destination.isValid(source.getOccupant().getTeam())){
-            if (destination.getOccupant().isKing()){
+            if (!destination.isEmpty() && destination.getOccupant().isKing()){
+                System.out.println("Game Over: "+source.getOccupant().getTeam() + " Won!");
                 this.gameOver = true;
             }
             destination.setOccupant(source.getOccupant());
@@ -70,7 +71,9 @@ public class ChessBoard {
             display();
             playerOne.play(this);
             display();
-            playerTwo.play(this);
+            if (!gameOver){
+                playerTwo.play(this);
+            }
         }
     }
     public void display() {
