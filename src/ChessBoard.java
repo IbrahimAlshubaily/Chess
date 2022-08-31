@@ -76,14 +76,22 @@ public class ChessBoard {
             }
         }
     }
-    public void display() {
-        System.out.println("_".repeat(59));
+    public void display(){
+        System.out.println(this);
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("_".repeat(59));
+        sb.append("\n");
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
-                System.out.print(board[i][j].getRepr());
+                sb.append(board[i][j].getRepr());
             }
-            System.out.println(" |");
+            sb.append(" |\n");
         }
-        System.out.println("_".repeat(59));
+        sb.append("_".repeat(59));
+        sb.append("\n");
+        return sb.toString();
     }
 }
