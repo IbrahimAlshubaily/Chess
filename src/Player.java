@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+
 public class Player{
     Team team;
     Player(Team team){
@@ -8,25 +10,31 @@ public class Player{
     }
     void play(ChessBoard board) throws IOException {
         System.out.println(this.team + " turn");
-        System.out.println("Enter: row,col");
+        System.out.println("Enter: row col");
         ChessBoardCell source = selectCell(board);
         if (!source.isEmpty() && source.getOccupant().getTeam() == this.team) {
 
-            System.out.println("Selected "+ source.getRepr());
+            System.out.println("Selected "+ source.getRepr() + " @ "+ source.row + " "+ source.col);
+            ArrayList<ChessBoardCell> validMoves = source.getMoves(board);
+            if (validMoves.size() == 0){
+                System.out.println("No valid moves, try again.");
+                play(board);
+                return;
+            }
             System.out.println("Select a destination among the following options");
-            for (ChessBoardCell cell : source.getMoves(board)) {
-                System.out.println(cell.getRepr());
+            for (ChessBoardCell cell : validMoves) {
+                System.out.println(cell.getRepr() + " @ "+ cell.row + " "+ cell.col);
             }
             ChessBoardCell destination = selectCell(board);
             board.movePiece(source, destination);
         } else{
-            System.out.println("Invlid Entry");
+            System.out.println("Invalid Entry");
             this.play(board);
         }
     }
     private ChessBoardCell selectCell(ChessBoard board) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String [] rowCol = reader.readLine().split(",");
+        String [] rowCol = reader.readLine().split(" ");
         int row = Integer.parseInt(rowCol[0]);
         int col = Integer.parseInt(rowCol[1]);
         if (!board.isInBounds(row, col)){
