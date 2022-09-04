@@ -1,43 +1,32 @@
 import java.util.ArrayList;
 
 class ChessBoardCell {
-    final int row;
-    final int col;
+    private final int row;
+    private final int col;
     private ChessPiece occupant;
     public ChessBoardCell(int row, int col){
         this.row = row;
         this.col = col;
     }
     public boolean isEmpty() {
-        return this.occupant == null;
+        return occupant == null;
     }
     public boolean isOpponent(Team team) {
-        return !this.isEmpty() && this.occupant.getTeam() != team;
+        return !isEmpty() && occupant.getTeam() != team;
     }
-    public boolean isValid(Team team) {
-        return this.isEmpty() || this.isOpponent(team);
-    }
-    public String getRepr() {
-        String result = " | ";
-        if (isEmpty()){
-            result += this.row + "  " + this.col;
-        } else {
-            result += " " + this.occupant.getRepr() + " ";
-        }
-        return result;
-    }
-
-    public void setOccupant(ChessPiece piece) {
-        this.occupant = piece;
-    }
-    ChessPiece getOccupant(){
-        return this.occupant;
-    }
+    int getRow(){ return row; }
+    int getCol(){ return col; }
+    ChessPiece getOccupant(){ return occupant; }
+    public void setOccupant(ChessPiece piece) { occupant = piece; }
 
     public ArrayList<ChessBoardCell> getMoves(ChessBoard chessBoard) {
-        ArrayList<ChessBoardCell> result = new ArrayList<>();
-        if (!this.isEmpty()){
-            result = this.occupant.getMoves(chessBoard, this);
+        if (this.isEmpty()) return new ArrayList<>();
+        return occupant.getMoves(chessBoard, this);
+    }
+    public String getRepr() {
+        String result = " | " + row + "  " + col;
+        if (!isEmpty()){
+            result = " |  " + occupant.getRepr() + " ";
         }
         return result;
     }

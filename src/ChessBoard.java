@@ -21,11 +21,11 @@ public class ChessBoard {
         }
     }
     private void initPieces() {
-        initPawns(Team.BLACK, BOARD_SIZE - 2);
-        initFirstRow(Team.BLACK, BOARD_SIZE - 1);
-
-        initPawns(Team.WHITE, 1);
         initFirstRow(Team.WHITE, 0);
+        initPawns(Team.WHITE, 1);
+
+        initPawns(Team.BLACK, 6);
+        initFirstRow(Team.BLACK, 7);
     }
     private void initPawns(Team team, int row) {
         for (int col = 0; col < BOARD_SIZE; col++){
@@ -33,14 +33,11 @@ public class ChessBoard {
         }
     }
     private void initFirstRow(Team team, int row) {
-        addPiece(new Rook(team), row, 0);
-        addPiece(new Bishop(team), row, 1);
-        addPiece(new Knight(team), row, 2);
-        addPiece(new Queen(team), row, 3);
-        addPiece(new King(team), row, 4);
-        addPiece(new Knight(team), row, 5);
-        addPiece(new Bishop(team), row, 6);
-        addPiece(new Rook(team), row, 7);
+        ChessPiece[] orderedPieces = { new Rook(team), new Bishop(team), new Knight(team), new Queen(team),
+                                        new King(team), new Knight(team), new Bishop(team), new Rook(team) };
+        for (int col = 0; col < orderedPieces.length; col++){
+            addPiece(orderedPieces[col], row, col);
+        }
     }
     public boolean isInBounds(int row, int col) {
         return 0 <= row && row < BOARD_SIZE && 0 <= col && col < BOARD_SIZE;
@@ -57,7 +54,7 @@ public class ChessBoard {
         }
     }
     public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
-        if (!source.isEmpty() || !destination.isValid(source.getOccupant().getTeam())){
+        if (isValidMove(source, destination)){
             if (!destination.isEmpty() && destination.getOccupant().isKing()){
                 System.out.println("Game Over: "+source.getOccupant().getTeam() + " Won!");
                 this.gameOver = true;
@@ -66,6 +63,11 @@ public class ChessBoard {
             source.setOccupant(null);
         }
     }
+    public boolean isValidMove(ChessBoardCell source, ChessBoardCell destination) {
+        if (source.isEmpty()) return false;
+        return destination.isEmpty() || destination.isOpponent(source.getOccupant().getTeam());
+    }
+
     void rollOut() throws IOException {
         while(!gameOver){
             display();

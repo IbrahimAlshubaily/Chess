@@ -13,8 +13,7 @@ public class Player{
         System.out.println("Enter: row col");
         ChessBoardCell source = selectCell(board);
         if (!source.isEmpty() && source.getOccupant().getTeam() == this.team) {
-
-            System.out.println("Selected "+ source.getRepr() + " @ "+ source.row + " "+ source.col);
+            System.out.println(getSelectionPrettyPrint(source));
             ArrayList<ChessBoardCell> validMoves = source.getMoves(board);
             if (validMoves.size() == 0){
                 System.out.println("No valid moves, try again.");
@@ -23,7 +22,7 @@ public class Player{
             }
             System.out.println("Select a destination among the following options");
             for (ChessBoardCell cell : validMoves) {
-                System.out.println(cell.getRepr() + " @ "+ cell.row + " "+ cell.col);
+                System.out.println(getSelectionPrettyPrint(cell));
             }
             ChessBoardCell destination = selectCell(board);
             board.movePiece(source, destination);
@@ -42,5 +41,8 @@ public class Player{
             return this.selectCell(board);
         }
         return board.getCell(row, col);
+    }
+    private String getSelectionPrettyPrint(ChessBoardCell cell){
+        return cell.getRepr() + " @ "+ cell.getRow() + " "+ cell.getCol();
     }
 }

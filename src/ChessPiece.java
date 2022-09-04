@@ -17,11 +17,11 @@ public class ChessPiece {
         int row, col;
         for (Direction dir : this.directions){
             for (int i = 1; i <= this.nSteps; i++){
-                row = currCell.row + i*dir.getRowOffset(team);
-                col = currCell.col + i*dir.getColOffset(team);
+                row = currCell.getRow() + i*dir.getRowOffset(team);
+                col = currCell.getCol() + i*dir.getColOffset(team);
                 if (board.isInBounds(row, col)){
                     newCell = board.getCell(row, col);
-                    if (newCell.isValid(team)) {
+                    if (board.isValidMove(currCell, newCell)) {
                         result.add(newCell);
                         if (!newCell.isEmpty()) break;
                     }else break;
@@ -30,61 +30,47 @@ public class ChessPiece {
         }
         return result;
     }
-    public Team getTeam() {
-        return this.team;
-    }
-    public String getRepr() {
-        return this.team.getRepr() + this.repr.toUpperCase();
-    }
-
-    public boolean isKing() {
-        return repr.equalsIgnoreCase("K");
-    }
+    public Team getTeam() { return team; }
+    public String getRepr() { return team.getRepr() + repr.toUpperCase(); }
+    public boolean isKing() { return repr.equalsIgnoreCase("K"); }
 
 }
 
 class Queen extends ChessPiece{
-    Queen(Team team){
-        super(team, "Q", Direction.getDirections(), 8);
-    }
+    Queen(Team team){ super(team, "Q", Direction.getDirections(), 8); }
 }
 class King extends ChessPiece{
-    King(Team team){
-        super(team, "K", Direction.getDirections(), 1);
-    }
+    King(Team team){ super(team, "K", Direction.getDirections(), 1); }
 }
 class Knight extends ChessPiece{
-    Knight(Team team){
-        super(team, "N", Direction.getKnightDirections(), 1);
-    }
+    Knight(Team team){ super(team, "N", Direction.getKnightDirections(), 1); }
 }
 class Bishop extends ChessPiece{
-    Bishop(Team team){
-        super(team, "B", new Direction []{Direction.FORWARD_LEFT, Direction.FORWARD_RIGHT,
-                Direction.BACKWARD_LEFT, Direction.BACKWARD_RIGHT}, 8);
-    }
+    Bishop(Team team){ super(team, "B", new Direction []{Direction.FORWARD_LEFT, Direction.FORWARD_RIGHT,
+                                                        Direction.BACKWARD_LEFT, Direction.BACKWARD_RIGHT}, 8); }
 }
 class Rook extends ChessPiece{
-    Rook(Team team){
-        super(team, "R", new Direction []{Direction.FORWARD, Direction.BACKWARD,
-                Direction.LEFT, Direction.RIGHT}, 8);
-    }
+    Rook(Team team){ super(team, "R", new Direction []{Direction.FORWARD, Direction.BACKWARD,
+                                                            Direction.LEFT, Direction.RIGHT}, 8); }
 }
 class Pawn extends ChessPiece{
-    Pawn(Team team){
-        super(team, "P", new Direction []{Direction.FORWARD}, 2);
-    }
+    Pawn(Team team){ super(team, "P", new Direction []{Direction.FORWARD}, 2); }
     public ArrayList<ChessBoardCell> getMoves(ChessBoard board, ChessBoardCell currCell){
         ArrayList<ChessBoardCell> result = new ArrayList<>();
-        int rowOffset = this.getTeam() == Team.WHITE? 1:-1;
+        int rowOffset = getTeam() == Team.WHITE? 1:-1;
+        int row,col;
         for (int i = 1; i < 3; i++){
-            if (isValidForwardMove(board,currCell.row + i*rowOffset, currCell.col)) {
-                result.add(board.getCell(currCell.row + i*rowOffset, currCell.col));
+            row = currCell.getRow() + i*rowOffset;
+            col = currCell.getCol();
+            if (isValidForwardMove(board, row, col)) {
+                result.add(board.getCell(row, col));
             }else break;
         }
         for (int colOffset : new int[]{1, -1}){
-            if (isValidDiagonalMove(board,currCell.row + rowOffset, currCell.col + colOffset)){
-                result.add(board.getCell(currCell.row + rowOffset, currCell.col + colOffset));
+            row = currCell.getRow() + rowOffset;
+            col = currCell.getCol() + colOffset;
+            if (isValidDiagonalMove(board, row, col)){
+                result.add(board.getCell(row, col));
             }
         }
         return result;
@@ -93,7 +79,7 @@ class Pawn extends ChessPiece{
         return board.isInBounds(row, col) && board.getCell(row, col).isEmpty();
     }
     private boolean isValidDiagonalMove(ChessBoard board, int row, int col){
-        return board.isInBounds(row, col) && board.getCell(row,col).isOpponent(this.getTeam());
+        return board.isInBounds(row, col) && board.getCell(row,col).isOpponent(getTeam());
     }
 
 }
