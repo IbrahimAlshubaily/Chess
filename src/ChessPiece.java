@@ -33,7 +33,6 @@ public class ChessPiece {
     public Team getTeam() { return team; }
     public String getRepr() { return team.getRepr() + repr.toUpperCase(); }
     public boolean isKing() { return repr.equalsIgnoreCase("K"); }
-
 }
 
 class Queen extends ChessPiece{
@@ -46,8 +45,10 @@ class Knight extends ChessPiece{
     Knight(Team team){ super(team, "N", Direction.getKnightDirections(), 1); }
 }
 class Bishop extends ChessPiece{
+
     Bishop(Team team){ super(team, "B", new Direction []{Direction.FORWARD_LEFT, Direction.FORWARD_RIGHT,
                                                         Direction.BACKWARD_LEFT, Direction.BACKWARD_RIGHT}, 8); }
+
 }
 class Rook extends ChessPiece{
     Rook(Team team){ super(team, "R", new Direction []{Direction.FORWARD, Direction.BACKWARD,
@@ -66,7 +67,7 @@ class Pawn extends ChessPiece{
                 result.add(board.getCell(row, col));
             }else break;
         }
-        for (int colOffset : new int[]{1, -1}){
+        for (int colOffset : new int[]{1, -1}) {
             row = currCell.getRow() + rowOffset;
             col = currCell.getCol() + colOffset;
             if (isValidDiagonalMove(board, row, col)){
