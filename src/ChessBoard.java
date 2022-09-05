@@ -1,15 +1,9 @@
-import java.io.IOException;
 
 public class ChessBoard {
     private static final int BOARD_SIZE = 8;
     private final ChessBoardCell[][] board = new ChessBoardCell[BOARD_SIZE][BOARD_SIZE];
-    private final Player playerOne;
-    private final Player playerTwo;
     private boolean gameOver = false;
-
     public ChessBoard(){
-        playerOne = new Player(Team.BLACK);
-        playerTwo = new Player(Team.WHITE);
         initBoard();
         initPieces();
     }
@@ -43,15 +37,16 @@ public class ChessBoard {
         return 0 <= row && row < BOARD_SIZE && 0 <= col && col < BOARD_SIZE;
     }
     public ChessBoardCell getCell(int row, int col) {
-        if (!isInBounds(row, col)){
-            throw new ArrayIndexOutOfBoundsException();
-        }
         return board[row][col];
     }
     void addPiece(ChessPiece piece, int row, int col){
         if (isInBounds(row, col)){
             this.board[row][col].setOccupant(piece);
         }
+    }
+    public boolean isValidMove(ChessBoardCell source, ChessBoardCell destination) {
+        if (source.isEmpty()) return false;
+        return destination.isEmpty() || destination.isOpponent(source.getOccupant().getTeam());
     }
     public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
         if (isValidMove(source, destination)){
@@ -63,21 +58,10 @@ public class ChessBoard {
             source.setOccupant(null);
         }
     }
-    public boolean isValidMove(ChessBoardCell source, ChessBoardCell destination) {
-        if (source.isEmpty()) return false;
-        return destination.isEmpty() || destination.isOpponent(source.getOccupant().getTeam());
+    boolean isGameOver(){
+        return gameOver;
     }
 
-    void rollOut() throws IOException {
-        while(!gameOver){
-            display();
-            playerOne.play(this);
-            display();
-            if (!gameOver){
-                playerTwo.play(this);
-            }
-        }
-    }
     public void display(){
         System.out.println(this);
     }
