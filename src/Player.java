@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Player{
     Team team;
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     Player(Team team){
         this.team = team;
     }
@@ -25,22 +26,27 @@ public class Player{
                 System.out.println(getSelectionPrettyPrint(cell));
             }
             ChessBoardCell destination = selectCell(board);
-            board.movePiece(source, destination);
+            board.movePiece(new BoardMove(source, destination));
         } else{
             System.out.println("Invalid Entry");
             this.play(board);
         }
     }
-    private ChessBoardCell selectCell(ChessBoard board) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String [] rowCol = reader.readLine().split(" ");
-        int row = Integer.parseInt(rowCol[0]);
-        int col = Integer.parseInt(rowCol[1]);
-        if (!board.isInBounds(row, col)){
-            System.out.println("Out of bounds, row and col must be more than 0 and less than 8. Try again:");
-            return this.selectCell(board);
+    private ChessBoardCell selectCell(ChessBoard board) {
+        try {
+            String[] rowCol = reader.readLine().split(" ");
+            int row = Integer.parseInt(rowCol[0]);
+            int col = Integer.parseInt(rowCol[1]);
+            if (!board.isInBounds(row, col)) {
+                System.out.println("Out of bounds, row and col must be more than 0 and less than 8. Try again:");
+                return this.selectCell(board);
+            }
+            return board.getCell(row, col);
+        } catch (Exception e){
+            System.out.println("Invalid Entry");
+            selectCell(board);
         }
-        return board.getCell(row, col);
+        return board.getCell(-1,-1);
     }
     private String getSelectionPrettyPrint(ChessBoardCell cell){
         return cell.getRepr() + " @ "+ cell.getRow() + " "+ cell.getCol();
