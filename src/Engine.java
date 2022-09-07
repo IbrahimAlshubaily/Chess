@@ -10,7 +10,9 @@ public class Engine {
             playerOne.play(board);
             board.display();
             if (!board.isGameOver()){
-                playerTwo.play(board);
+                BoardMove move  = MinMax.minMax(board, playerTwo, playerOne);
+                board.movePiece(move);
+
             }
         }
     }

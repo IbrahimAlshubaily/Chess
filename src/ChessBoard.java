@@ -48,16 +48,29 @@ public class ChessBoard {
         if (source.isEmpty()) return false;
         return destination.isEmpty() || destination.isOpponent(source.getOccupant().getTeam());
     }
-    public void movePiece(ChessBoardCell source, ChessBoardCell destination) {
-        if (isValidMove(source, destination)){
-            if (!destination.isEmpty() && destination.getOccupant().isKing()){
-                System.out.println("Game Over: "+source.getOccupant().getTeam() + " Won!");
+    public void movePiece(BoardMove move) {
+        if (isValidMove(move.source(), move.destination())){
+            if (!move.destination().isEmpty() && move.destination().getOccupant().isKing()){
+                System.out.println("Game Over: "+move.source().getOccupant().getTeam() + " Won!");
                 this.gameOver = true;
             }
-            destination.setOccupant(source.getOccupant());
-            source.setOccupant(null);
+            move.destination().setOccupant(move.source().getOccupant());
+            move.source().setOccupant(null);
         }
     }
+
+    ChessPiece reversibleMove(BoardMove move){
+        ChessPiece prevOccupant = move.destination().getOccupant();
+        move.destination().setOccupant(move.source().getOccupant());
+        move.source().setOccupant(null);
+        return prevOccupant;
+    }
+    void reverseMove(BoardMove move, ChessPiece prevOccupant){
+        this.gameOver = false;
+        move.source().setOccupant(move.destination().getOccupant());
+        move.destination().setOccupant(prevOccupant);
+    }
+
     boolean isGameOver(){
         return gameOver;
     }
@@ -80,4 +93,10 @@ public class ChessBoard {
         sb.append("\n");
         return sb.toString();
     }
+
+    public int getSize() {
+        return BOARD_SIZE;
+    }
 }
+
+record BoardMove(ChessBoardCell source, ChessBoardCell destination){}
